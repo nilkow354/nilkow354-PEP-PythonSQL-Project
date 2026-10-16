@@ -12,9 +12,6 @@ conn = sqlite3.connect(':memory:')
 # A cursor object to execute SQL commands
 cursor = conn.cursor()
 
-user_record_length = 2
-call_log_record_length = 6
-
 def main():
 
     # users table
@@ -55,13 +52,13 @@ def main():
 
 # This function will load the users.csv file into the users table, discarding any records with incomplete data
 def load_and_clean_users(file_path):
-    read_file(file_path)
+    read_file(file_path, "user")
     print("TODO: load_users")
 
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
 def load_and_clean_call_logs(file_path):
-
+    read_file(file_path, "call")
     print("TODO: load_call_logs")
 
 
@@ -79,7 +76,7 @@ def write_ordered_calls(csv_file_path):
 
     print("TODO: write_ordered_calls")
 
-def read_file(file_path):
+def read_file(file_path, user_or_call):
     header_list = []
     header_size = 0
     header_read = False
@@ -100,11 +97,18 @@ def read_file(file_path):
                 print("invalid")
                 continue
             
-            insert_users(new_record)
+            if user_or_call == "user":
+                insert_users(new_record)
+            elif user_or_call == "call":
+                insert_call(new_record)
+            else:
+                print("ERROR: call or user not selected")
+                return
         
     cursor.execute("SELECT * FROM users;")
     print(cursor.fetchall())
-            
+    cursor.execute("SELECT * FROM callLogs;")
+    print(cursor.fetchall())
 
 def insert_users(new_user):
     
@@ -114,10 +118,13 @@ def insert_users(new_user):
         VALUES ('{new_user[0]}', '{new_user[1]}');
     """)
 
-def insert_call_logs(new_call_log):
-    if(len(new_call_log) != call_log_record_length or any(element == "" for element in new_call_log)):
-        print("INVALID\n")
-        return
+def insert_call(new_call_log):
+
+    cursor.execute(f"""
+        INSERT INTO callLogs (phoneNumber, startTime, endTime, direction, userId)
+        VALUES ('{new_call_log[0]}', '{new_call_log[1]}', '{new_call_log[2]}', '{new_call_log[3]}', '{new_call_log[4]}');
+    """)
+    
 
 # No need to touch the functions below!------------------------------------------
 
