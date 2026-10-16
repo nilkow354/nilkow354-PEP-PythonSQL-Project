@@ -12,6 +12,8 @@ conn = sqlite3.connect(':memory:')
 # A cursor object to execute SQL commands
 cursor = conn.cursor()
 
+user_record_length = 2
+call_log_record_length = 6
 
 def main():
 
@@ -92,23 +94,30 @@ def read_file(file_path):
                 header_size = len(header_list)
                 header_read = True
                 continue
-        
-            new_record = line.split(",")
             
-            if len(new_record) != header_size or len(new_record[0]) == 0 or len(new_record[1]) == 0:
+            new_record = line.split(",")
+            if len(new_record) != header_size or any(element == "" for element in new_record):
+                print("invalid")
                 continue
-
-            insert_users(new_record)
+            
+            insert_users(new_record, header_size)
         
     cursor.execute("SELECT * FROM users;")
     print(cursor.fetchall())
             
 
 def insert_users(new_user):
+    
+
     cursor.execute(f"""
         INSERT INTO users (firstName, lastName)
         VALUES ('{new_user[0]}', '{new_user[1]}');
     """)
+
+def insert_call_logs(new_call_log):
+    if(len(new_call_log) != call_log_record_length or any(element == "" for element in new_call_log)):
+        print("INVALID\n")
+        return
 
 # No need to touch the functions below!------------------------------------------
 
