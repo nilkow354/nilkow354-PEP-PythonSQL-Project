@@ -94,13 +94,13 @@ def read_file(file_path):
                 header_size = len(header_list)
                 header_read = True
                 continue
-            
+
             new_record = line.split(",")
             if len(new_record) != header_size or any(element == "" for element in new_record):
                 print("invalid")
                 continue
             
-            insert_users(new_record, header_size)
+            insert_users(new_record)
         
     cursor.execute("SELECT * FROM users;")
     print(cursor.fetchall())
