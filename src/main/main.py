@@ -53,7 +53,7 @@ def main():
 
 # This function will load the users.csv file into the users table, discarding any records with incomplete data
 def load_and_clean_users(file_path):
-
+    read_file(file_path)
     print("TODO: load_users")
 
 
@@ -77,7 +77,38 @@ def write_ordered_calls(csv_file_path):
 
     print("TODO: write_ordered_calls")
 
+def read_file(file_path):
+    header_list = []
+    header_size = 0
+    header_read = False
 
+    with open(file_path, "r") as my_file:
+        
+
+        for line in my_file:
+            line = line.replace("\n", "")
+            if header_read == False:
+                header_list = line.split(",")
+                header_size = len(header_list)
+                header_read = True
+                continue
+        
+            new_record = line.split(",")
+            
+            if len(new_record) != header_size or len(new_record[0]) == 0 or len(new_record[1]) == 0:
+                continue
+
+            insert_users(new_record)
+        
+    cursor.execute("SELECT * FROM users;")
+    print(cursor.fetchall())
+            
+
+def insert_users(new_user):
+    cursor.execute(f"""
+        INSERT INTO users (firstName, lastName)
+        VALUES ('{new_user[0]}', '{new_user[1]}');
+    """)
 
 # No need to touch the functions below!------------------------------------------
 
@@ -102,6 +133,8 @@ def select_from_users_and_call_logs():
     cursor.execute('''SELECT * FROM callLogs''')
     for row in cursor:
         print(row)
+
+    
 
 
 def return_cursor():
