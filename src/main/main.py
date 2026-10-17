@@ -61,7 +61,9 @@ def load_and_clean_users(file_path):
 def load_and_clean_call_logs(file_path):
     read_file(file_path, "call")
     cursor.execute("SELECT * FROM callLogs;")
-    print(cursor.fetchall())
+    table = cursor.fetchall()
+    for row in table: 
+        print(row)
 
 
 # This function will write analytics data to testUserAnalytics.csv - average call time, and number of calls per user.
