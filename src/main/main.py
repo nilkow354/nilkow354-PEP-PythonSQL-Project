@@ -53,13 +53,11 @@ def main():
 # This function will load the users.csv file into the users table, discarding any records with incomplete data
 def load_and_clean_users(file_path):
     read_file(file_path, "user")
-    print("TODO: load_users")
 
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
 def load_and_clean_call_logs(file_path):
     read_file(file_path, "call")
-    print("TODO: load_call_logs")
 
 
 # This function will write analytics data to testUserAnalytics.csv - average call time, and number of calls per user.
@@ -72,17 +70,17 @@ def write_user_analytics(csv_file_path):
         GROUP BY userId;
     """)
 
-    print("call data test\n\n")
     user_analytics = cursor.fetchall()
     
-    with open("new_file.txt", "w") as new_file:
+    with open("resources/userAnalytics.csv", "w") as new_file:
         new_file.write("userId,aveCallTime,numCalls\n")
-        for row in user_analytics:
+        for index, row in enumerate(user_analytics):
             call_time = (row[2] - row[1]) / row[3]
-            new_file.write(f"{row[0]},{call_time},{row[3]}\n")
-            print(f"{row[0]},{call_time},{row[3]}\n")
+            if index != len(user_analytics) - 1:
+                new_file.write(f"{row[0]},{call_time},{row[3]}\n")
+            else:
+                new_file.write(f"{row[0]},{call_time},{row[3]}")
         
-    print("TODO: write_user_analytics")
 
 
 # This function will write the callLogs ordered by userId, then start time.
@@ -96,10 +94,14 @@ def write_ordered_calls(csv_file_path):
     """)
     ordered_calls = cursor.fetchall()
 
-    with open("new_file2.txt", "w") as new_file:
-        for row in ordered_calls:
-            new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
-    print("TODO: write_ordered_calls")
+    with open("resources/orderedCalls.csv", "w") as new_file:
+        new_file.write("callId,phoneNumber,startTime,endTime,direction,userId")
+        for index, row in enumerate(ordered_calls):
+            if index != len(ordered_calls) - 1:
+                new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
+            else:
+                new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}")
+             
 
 def read_file(file_path, user_or_call):
     header_list = []
@@ -119,7 +121,6 @@ def read_file(file_path, user_or_call):
 
             new_record = line.split(",")
             if len(new_record) != header_size or any(element == "" for element in new_record):
-                print("invalid")
                 continue
             
             if user_or_call == "user":
@@ -129,11 +130,6 @@ def read_file(file_path, user_or_call):
             else:
                 print("ERROR: call or user not selected")
                 return
-        
-    cursor.execute("SELECT * FROM users;")
-    print(cursor.fetchall())
-    cursor.execute("SELECT * FROM callLogs;")
-    print(cursor.fetchall())
 
 def insert_users(new_user):
     
