@@ -73,7 +73,9 @@ def write_user_analytics(csv_file_path):
     """)
 
     print("call data test\n\n")
-    print(cursor.fetchall())
+    user_analytics = cursor.fetchall()
+    for row in user_analytics:
+        print(f"{row[0]},{row[1]/row[2]},{row[3]}")
     print("TODO: write_user_analytics")
 
 
