@@ -78,7 +78,7 @@ def write_user_analytics(csv_file_path):
 
     user_analytics = cursor.fetchall()
     
-    with open("resources/userAnalytics.csv", "w") as new_file:
+    with open(f"resources/{csv_file_path}", "w") as new_file:
         new_file.write("userId,aveCallTime,numCalls,THISISATEST\n")
         for index, row in enumerate(user_analytics):
             call_time = (row[2] - row[1]) / row[3]
