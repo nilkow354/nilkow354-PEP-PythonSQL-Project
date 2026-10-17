@@ -67,7 +67,7 @@ def load_and_clean_call_logs(file_path):
 # example: 1,105.0,4 - where 1 is the userId, 105.0 is the avgDuration, and 4 is the numCalls.
 def write_user_analytics(csv_file_path):
     cursor.execute("""
-        SELECT userId, startTime, endTime, count(userId) AS num_calls
+        SELECT userId, sum(startTime) AS sum_start_time, sum(endTime) AS sum_end_time, count(userId) AS num_calls
         FROM callLogs
         GROUP BY userId;
     """)
