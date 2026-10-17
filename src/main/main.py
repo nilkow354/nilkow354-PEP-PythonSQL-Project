@@ -122,7 +122,7 @@ def read_file(file_path, user_or_call):
                 continue
 
             new_record = line.split(",")
-            if len(new_record) != header_size or any(element == "" for element in new_record):
+            if len(new_record) != header_size or any(element == "" or element.startswith(" ") for element in new_record):
                 continue
             
             if user_or_call == "user":
