@@ -74,8 +74,14 @@ def write_user_analytics(csv_file_path):
 
     print("call data test\n\n")
     user_analytics = cursor.fetchall()
-    for row in user_analytics:
-        print(f"{row[0]},{row[1]/row[2]},{row[3]}")
+    
+    with open("new_file.txt", "w") as new_file:
+        new_file.write("userId,aveCallTime,numCalls\n")
+        for row in user_analytics:
+            call_time = (row[2] - row[1]) / row[3]
+            new_file.write(f"{row[0]},{call_time},{row[3]}\n")
+            print(f"{row[0]},{call_time},{row[3]}\n")
+        
     print("TODO: write_user_analytics")
 
 
@@ -88,6 +94,11 @@ def write_ordered_calls(csv_file_path):
         ORDER BY userId, startTime;
 
     """)
+    ordered_calls = cursor.fetchall()
+
+    with open("new_file2.txt", "w") as new_file:
+        for row in ordered_calls:
+            new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
     print("TODO: write_ordered_calls")
 
 def read_file(file_path, user_or_call):
