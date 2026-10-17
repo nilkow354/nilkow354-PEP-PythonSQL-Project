@@ -86,7 +86,10 @@ def write_user_analytics(csv_file_path):
                 new_file.write(f"{row[0]},{call_time},{row[3]}\n")
             else:
                 new_file.write(f"{row[0]},{call_time},{row[3]}")
-            print(f"{row[0]},{call_time},{row[3]}")
+
+    with open("resources/userAnalytics.csv", "r") as file:
+        for line in file:
+            print(line)
         
 
 
@@ -108,7 +111,11 @@ def write_ordered_calls(csv_file_path):
                 new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
             else:
                 new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}")
-            print(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
+    
+    with open("resources/orderedCalls.csv", "r") as file:
+        for line in file:
+            print(line)
+        
              
 
 def read_file(file_path, user_or_call):
