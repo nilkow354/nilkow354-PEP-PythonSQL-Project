@@ -53,6 +53,8 @@ def main():
 # This function will load the users.csv file into the users table, discarding any records with incomplete data
 def load_and_clean_users(file_path):
     read_file(file_path, "user")
+    cursor.execute("SELECT * FROM users;")
+    print(cursor.fetchall())
 
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
