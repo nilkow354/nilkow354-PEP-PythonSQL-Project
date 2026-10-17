@@ -79,11 +79,11 @@ def write_user_analytics(csv_file_path):
     user_analytics = cursor.fetchall()
     
     with open("resources/userAnalytics.csv", "w") as new_file:
-        new_file.write("userId,aveCallTime,numCalls\n")
+        new_file.write("userId,aveCallTime,numCalls,THISISATEST\n")
         for index, row in enumerate(user_analytics):
             call_time = (row[2] - row[1]) / row[3]
             if index != len(user_analytics) - 1:
-                new_file.write(f"{row[0]},{call_time},{row[3]}\n")
+                new_file.write(f"{row[0]},{call_time},{row[3]}\n7")
             else:
                 new_file.write(f"{row[0]},{call_time},{row[3]}")
 
@@ -108,7 +108,7 @@ def write_ordered_calls(csv_file_path):
         new_file.write("callId,phoneNumber,startTime,endTime,direction,userId")
         for index, row in enumerate(ordered_calls):
             if index != len(ordered_calls) - 1:
-                new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n7")
+                new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
             else:
                 new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}")
     
