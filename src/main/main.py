@@ -146,9 +146,9 @@ def read_file(file_path, user_or_call):
                 if not element.strip():
                     bad_record = True
                     break
-            if bad_record = True:
+            if bad_record == True:
                 continue
-            
+
             if len(new_record) != header_size or any(element == "" or element.startswith(" ") for element in new_record):
                 continue
 
