@@ -141,7 +141,8 @@ def read_file(file_path, user_or_call):
 
             #parse data. if data doesn't match up with the header or a data point is blank, go to next line
             new_record = line.split(",")
-
+            if len(new_record) != header_size:
+                continue
             for element in new_record:
                 if not element.strip():
                     bad_record = True
@@ -149,8 +150,7 @@ def read_file(file_path, user_or_call):
             if bad_record == True:
                 continue
 
-            if len(new_record) != header_size or any(element == "" or element.startswith(" ") for element in new_record):
-                continue
+            
 
             
 
