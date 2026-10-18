@@ -113,9 +113,7 @@ def write_ordered_calls(csv_file_path):
             else:
                 new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}")
     
-    with open("resources/orderedCalls.csv", "r") as file:
-        for line in file:
-            print(line)
+
         
              
 #opens file located at file_path. 
@@ -149,11 +147,6 @@ def read_file(file_path, user_or_call):
                     break
             if bad_record == True:
                 continue
-
-            
-
-            
-
             
             #call insert_user or insert_call based on user_or_call. pass the cleaned line as an argument
             if user_or_call == "user":
