@@ -76,25 +76,28 @@ def write_user_analytics(csv_file_path):
     user_analytics = cursor.fetchall()
     
     #open file found at csv_file_path and write the data found in user_analytics into it
-    with open(csv_file_path, "w") as new_file:
-        #add header to file
-        new_file.write("userId,aveCallTime,numCalls,THISISATEST\n")
+    try:
+        with open(csv_file_path, "w") as new_file:
+            #add header to file
+            new_file.write("userId,aveCallTime,numCalls,THISISATEST\n")
 
-        #for each row in user_analytics, calculate call time and write userId, avgDuration, and numCalls into new_file
-        for index, row in enumerate(user_analytics):
-            call_time = (row[2] - row[1]) / row[3]
-            if index != len(user_analytics) - 1:
-                new_file.write(f"{row[0]},{call_time},{row[3]}\n")
-            #if this is the last row in user_analytics, don't add new line character
-            else:
-                new_file.write(f"{row[0]},{call_time},{row[3]}")
+            #for each row in user_analytics, calculate call time and write userId, avgDuration, and numCalls into new_file
+            for index, row in enumerate(user_analytics):
+                call_time = (row[2] - row[1]) / row[3]
+                if index != len(user_analytics) - 1:
+                    new_file.write(f"{row[0]},{call_time},{row[3]}\n")
+                #if this is the last row in user_analytics, don't add new line character
+                else:
+                    new_file.write(f"{row[0]},{call_time},{row[3]}")
         
-
+    except:
+        print("ERROR: could not write to file")
 
 # This function will write the callLogs ordered by userId, then start time.
 # Then, write the ordered callLogs to orderedCalls.csv
 def write_ordered_calls(csv_file_path):
     #query callLogs table then save output in ordered_calls
+    
     cursor.execute("""
         SELECT * 
         FROM callLogs
@@ -104,15 +107,17 @@ def write_ordered_calls(csv_file_path):
     ordered_calls = cursor.fetchall()
 
     #open file found at csv_file_path then write the data found in ordered_calls to it
-    with open(csv_file_path, "w") as new_file:
-        #add header
-        new_file.write("callId,phoneNumber,startTime,endTime,direction,userId")
-        for index, row in enumerate(ordered_calls):
-            if index != len(ordered_calls) - 1:
-                new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
-            else:
-                new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}")
-    
+    try:
+        with open(csv_file_path, "w") as new_file:
+            #add header
+            new_file.write("callId,phoneNumber,startTime,endTime,direction,userId")
+            for index, row in enumerate(ordered_calls):
+                if index != len(ordered_calls) - 1:
+                    new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}\n")
+                else:
+                    new_file.write(f"{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]}")
+    except:
+        print("ERROR: could not write to file")
 
         
              
@@ -124,40 +129,42 @@ def read_file(file_path, user_or_call):
     header_read = False
 
     #opens file at file_path for reading
-    with open(file_path, "r") as my_file:
-        #for each line in file. extract and clean the data. then call an insert function
-        for line in my_file:
-            #removes new line characters
-            bad_record = False
-            line = line.replace("\n", "")
-            #if this is the first line, extract header
-            if header_read == False:
-                header_list = line.split(",")
-                header_size = len(header_list)
-                header_read = True
-                continue
+    try:
+        with open(file_path, "r") as my_file:
+            #for each line in file. extract and clean the data. then call an insert function
+            for line in my_file:
+                #removes new line characters
+                bad_record = False
+                line = line.replace("\n", "")
+                #if this is the first line, extract header
+                if header_read == False:
+                    header_list = line.split(",")
+                    header_size = len(header_list)
+                    header_read = True
+                    continue
 
-            #parse data. if data doesn't match up with the header or a data point is blank, go to next line
-            new_record = line.split(",")
-            if len(new_record) != header_size:
-                continue
-            for element in new_record:
-                if not element.strip():
-                    bad_record = True
-                    break
-            if bad_record == True:
-                continue
+                #parse data. if data doesn't match up with the header or a data point is blank, go to next line
+                new_record = line.split(",")
+                if len(new_record) != header_size:
+                    continue
+                for element in new_record:
+                    if not element.strip():
+                        bad_record = True
+                        break
+                if bad_record == True:
+                    continue
             
-            #call insert_user or insert_call based on user_or_call. pass the cleaned line as an argument
-            if user_or_call == "user":
-                insert_users(new_record)
-            elif user_or_call == "call":
-                insert_call(new_record)
-            #if neither 'user' or 'call' was found in user_or_call, raise an error
-            else:
-                print("ERROR: call or user not selected")
-                return
-
+                #call insert_user or insert_call based on user_or_call. pass the cleaned line as an argument
+                if user_or_call == "user":
+                    insert_users(new_record)
+                elif user_or_call == "call":
+                    insert_call(new_record)
+                #if neither 'user' or 'call' was found in user_or_call, raise an error
+                else:
+                    print("ERROR: call or user not selected")
+                    return
+    except:
+        print("ERROR: could not read file")
 #inserts a new user into users table
 def insert_users(new_user):
     
